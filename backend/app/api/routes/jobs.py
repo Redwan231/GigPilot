@@ -14,6 +14,7 @@ from app.db.models.job import Job
 from app.db.models.score import Score
 from app.db.session import system_session
 from app.schemas.jobs import JobDetailOut, JobListOut, JobOut, ScoreOut
+from app.services.scoring import score_job
 
 router = APIRouter(prefix="/jobs", tags=["jobs"])
 
@@ -89,6 +90,30 @@ async def list_jobs(
         items=[_job_out(j) for j in rows],
         next_cursor=next_cursor,
     )
+
+
+@router.post("/{job_id}/score", response_model=ScoreOut)
+async def score_job_endpoint(
+    job_id: uuid.UUID,
+    user_id: uuid.UUID = Depends(get_current_user_id),
+) -> ScoreOut:
+    async with system_session() as session:
+        try:
+            s = await score_job(user_id, job_id, session)
+        except ValueError as exc:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc))
+        except PermissionError as exc:
+            raise HTTPException(status_code=status.HTTP_429_TOO_MANY_REQUESTS, detail=str(exc))
+
+        return ScoreOut(
+            id=s.id,
+            score=s.score,
+            confidence=s.confidence,
+            dimensions=s.dimensions,
+            reasoning=s.reasoning,
+            profile_version=s.profile_version,
+            created_at=s.created_at,
+        )
 
 
 @router.get("/{job_id}", response_model=JobDetailOut)
