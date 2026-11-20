@@ -128,4 +128,4 @@ Legend: `[ ]` todo · `[x]` done · each task notes the doc it derives from and 
 2026-11-20 | P2-15 | 7668207 | Feedback loop: outcome stats injected as one line into scoring prompt
 2026-11-20 | P2-16 | 7668207 | GET /health + GET /health/ready (DB+Redis probe); 2 tests pass
 2026-11-20 | P2-17 | 7668207 | MCP server: search_jobs, score_job, draft_proposal, list_proposals, set_outcome; auth via MCP_AUTH_TOKEN
-2026-11-20 | P3-1..P3-13 | pending | Phase 3 UI: Tailwind tokens, UI primitives, API client+auth ctx, middleware, login/signup/onboarding/app shell/feed/job detail/proposals/dashboard/settings/404+error boundary+offline toast
+2026-11-20 | P3-1..P3-13 | 4549b35 | Phase 3 UI: Tailwind tokens, UI primitives, API client+auth ctx, middleware, login/signup/onboarding/app shell/feed/job detail/proposals/dashboard/settings/404+error boundary+offline toast
