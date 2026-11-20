@@ -47,6 +47,16 @@ class Settings(BaseSettings):
     llm_api_key: str = ""
     llm_model: str = "glm-5.3-flash"
 
+    # --- CORS (comma-separated origins, e.g. Vercel URL + localhost) ---
+    cors_origins: list[str] = ["http://localhost:3000"]
+
+    @field_validator("cors_origins", mode="before")
+    @classmethod
+    def _split_origins(cls, v: object) -> object:
+        if isinstance(v, str):
+            return [o.strip() for o in v.split(",") if o.strip()]
+        return v
+
     # --- Limits (04_TRD §8) ---
     free_drafts_per_month: int = 30
     pro_drafts_per_month: int = 500

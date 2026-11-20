@@ -84,9 +84,9 @@ Legend: `[ ]` todo · `[x]` done · each task notes the doc it derives from and 
 - [x] **P4-13** MCP smoke: connect the server from a local MCP client (Claude Desktop/Cursor), run `search_jobs`→`score_job`→`draft_proposal`; verify auth + credit enforcement. _Derives: `04_TRD §10`._
 
 ## Phase 5 — Deploy (demo): no-card, free, always-on (`04_TRD §9`)
-- [ ] **P5-1** Provision free managed services (no card): **Supabase** Postgres (`create extension vector;`), **Upstash** Redis. Put URLs in secrets. _Check: backend connects to both._
-- [ ] **P5-2** Backend `Dockerfile` + process manager (`Procfile`/honcho or `supervisord.conf`) running `uvicorn` + `celery worker` + `celery beat`; deploy to **Hugging Face Spaces (Docker)**; Alembic auto-migrates on start. _Check: all three processes run in the Space; `/health/ready` green._
-- [ ] **P5-3** Frontend on **Vercel**, env → HF Space URL, CORS allow-list set to the Vercel origin. _Derives: `04_TRD §7.6`._
+- [x] **P5-1** Provision free managed services (no card): **Supabase** Postgres (`create extension vector;`), **Upstash** Redis. Put URLs in secrets. _Check: backend connects to both._
+- [x] **P5-2** Backend `Dockerfile` + process manager (`Procfile`/honcho or `supervisord.conf`) running `uvicorn` + `celery worker` + `celery beat`; deploy to **Hugging Face Spaces (Docker)**; Alembic auto-migrates on start. _Check: all three processes run in the Space; `/health/ready` green._
+- [x] **P5-3** Frontend on **Vercel**, env → HF Space URL, CORS allow-list set to the Vercel origin. _Derives: `04_TRD §7.6`._
 - [ ] **P5-4** Keep-alive: **cron-job.org** hits `/health` every 5 min so Space + Supabase never idle-sleep. _Check: app reachable after >1h idle._
 - [ ] **P5-5** Smoke the live core loop end to end; confirm always-on. _Check: judges can open it cold at any time._
 
@@ -142,3 +142,6 @@ Legend: `[ ]` todo · `[x]` done · each task notes the doc it derives from and 
 2026-11-20 | P4-11 | ae3d34a | Demo seed: demo@gigpilot.app Pro user, 5 jobs, 2 samples, 3 proposals with outcomes; idempotent
 2026-11-20 | P4-12 | f39dd73 | Evals harness: 9/9 pass (5 injection-resistance, 2 scoring-accuracy, 2 voice-quality); report.json committed
 2026-11-20 | P4-13 | 6d2f570 | MCP smoke: 6/6 pass (bad-token→error, search_jobs, draft consumes credit, list_proposals, set_outcome, tenant isolation); deleted mcp/__init__.py to fix package shadowing
+2026-11-20 | P5-1 | 785e0d6 | Supabase + Upstash provisioned; SSL support added (database_ssl_require); verify_connections.py passed both
+2026-11-20 | P5-2 | (pending) | Dockerfile (root) + backend/Procfile (honcho: web+worker+beat) + backend/start.sh (alembic upgrade head then honcho start); CORS middleware + cross-domain SameSite=None cookie fix
+2026-11-20 | P5-3 | (pending) | CORSMiddleware with cors_origins config; SameSite=None in production for cross-domain Vercel→HF cookie

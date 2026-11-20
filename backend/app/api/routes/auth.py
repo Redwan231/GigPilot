@@ -37,13 +37,16 @@ def _add_one_month(d: datetime.date) -> datetime.date:
 
 
 def _set_refresh_cookie(response: Response, raw_token: str) -> None:
+    # Cross-domain (Vercel frontend → HF Spaces backend) requires SameSite=None;
+    # Secure=True. SameSite=None without Secure is rejected by all modern browsers.
+    _prod = settings.environment == "production"
     response.set_cookie(
         key=REFRESH_COOKIE,
         value=raw_token,
         max_age=settings.refresh_token_ttl_days * 86400,
         httponly=True,
-        secure=settings.environment == "production",
-        samesite="lax",
+        secure=_prod,
+        samesite="none" if _prod else "lax",
         path="/",
     )
 
