@@ -34,7 +34,7 @@ Legend: `[ ]` todo · `[x]` done · each task notes the doc it derives from and 
 - [x] **P1-10** RLS isolation test: user A cannot read user B's rows even with forged `user_id` in body. _Check: test passes (critical security gate)._
 
 ## Phase 2 — Core API & Services (no UI yet)
-- [ ] **P2-1** `me` endpoints: `GET /me`, `PATCH /me/profile` (bumps `profile_version`), onboarding completion. _Derives: US-A3, `02_AppFlow §4.4`._
+- [x] **P2-1** `me` endpoints: `GET /me`, `PATCH /me/profile` (bumps `profile_version`), onboarding completion. _Derives: US-A3, `02_AppFlow §4.4`._
 - [ ] **P2-2** Writing samples: `POST/GET/DELETE /me/samples` (size/count limits). _Derives: US-A4._
 - [ ] **P2-3** `ai/embeddings.py` (Gemini `gemini-embedding-001` via google-genai) + chunking; embed samples on create, delete chunks on sample delete. _Check: chunks+vectors written, dim=768._
 - [ ] **P2-4** Adapters: `base.py` + 4 source adapters with unified `Job` normalize (`04_TRD §4.1`). _Check: each returns normalized Jobs from a fixture._
@@ -110,3 +110,4 @@ Legend: `[ ]` todo · `[x]` done · each task notes the doc it derives from and 
 2026-11-20 | P1-8 | edb714f | Auth endpoints (schemas/auth, main app factory, api/routes/auth, conftest w/ NullPool + truncate). signup/login/refresh(rotation+reuse-detect+10s grace)/logout on system_session. Migration 099ba0111c1e adds refresh_tokens.revoked_at (reconciles §3.10 w/ §6). 10 integration + 6 unit tests pass (happy/401/rotation/reuse/logout-final)
 2026-11-20 | P1-9 | 2b5b293 | api/deps.py: get_current_user_id (verify Bearer JWT), get_tenant_db (tenant_session RLS GUC), get_current_user (privileged user load); core/rate_limit.py (slowapi Limiter wired into app); protected GET /me (api/routes/me.py). 3 deps tests: no token->401, bad token->401, valid->200
 2026-11-20 | P1-10 | b7d0b96 | RLS isolation gate (test_rls.py, 4 tests) GENUINELY PASS vs real Postgres under non-BYPASSRLS role: A sees only A; forged-id read of B -> nothing; forged INSERT user_id=B -> WITH CHECK reject (DBAPIError); forged UPDATE/DELETE -> 0 rows; API token maps to own user only. Full suite 24 passed
+2026-11-20 | P2-1 | 0402b0a | GET /me (full user+profile), PATCH /me/profile (upsert+version bump+onboarding completion); schemas/me.py + 6 tests pass
