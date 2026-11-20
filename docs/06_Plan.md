@@ -23,7 +23,7 @@ Legend: `[ ]` todo · `[x]` done · each task notes the doc it derives from and 
 
 ## Phase 1 — Database & Auth (foundation of everything)
 - [x] **P1-1** Alembic init + async engine/session in `db/session.py`, incl. RLS GUC setter hook. _Derives: `05_Schema.md §5`._
-- [ ] **P1-2** Migration: extensions + enum types (`05_Schema.md §1–2`). _Check: migration up/down clean._
+- [x] **P1-2** Migration: extensions + enum types (`05_Schema.md §1–2`). _Check: migration up/down clean._
 - [ ] **P1-3** Migration: `users`, `profiles`, `subscriptions`, `refresh_tokens` + indexes + `updated_at` triggers. _Check: tables exist._
 - [ ] **P1-4** Migration: `writing_samples`, `sample_chunks` (vector(768) + HNSW), `jobs`, `scores`, `proposals`, `ai_usage`, `source_health`. _Check: HNSW index present, dim=768._
 - [ ] **P1-5** Migration: enable RLS + `tenant_isolation` policies on all user-owned tables (`05_Schema.md §5.2`). _Check: unset GUC → zero rows._
@@ -101,3 +101,4 @@ Legend: `[ ]` todo · `[x]` done · each task notes the doc it derives from and 
 2026-11-20 | P0-5 | 497ded4 | Next.js 14.2.35 scaffold (TS/App Router/Tailwind) hand-rolled + deps per 04_TRD §1 (react 18.3.1, TS 5.4.5, tailwind 3.4.19, TanStack/RHF/Zod/Recharts/lucide + vitest/playwright/eslint); npm install ok, package-lock committed; `next dev` boots (GET / -> 200)
 2026-11-20 | P0-6 | 018178f | Makefile with backend-test/fe-test/test/lint targets; backend pytest green (1 smoke test), frontend vitest --passWithNoTests exit 0. make not installed on this Windows box; verified underlying commands directly
 2026-11-20 | P1-1 | 9661107 | Alembic (async env.py) + config.py (pydantic-settings, asyncpg URL normalize) + db/base.py + db/session.py with tenant_session (SET LOCAL ROLE gigpilot_app + set_config GUC) & system_session. alembic current clean vs local pgvector; ruff/black clean
+2026-11-20 | P1-2 | 15542f8 | Migration 85563be81646: extensions (pgcrypto/vector/citext) + 7 enum types; up/down/up clean on local pgvector, objects verified
