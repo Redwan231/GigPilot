@@ -1,0 +1,66 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "gigpilot-backend"
+version = "0.1.0"
+description = "GigPilot backend — FastAPI + Celery + LangGraph job-aggregation & AI proposal agent"
+readme = "README.md"
+requires-python = ">=3.12"
+license = { text = "Proprietary" }
+
+# Versions pinned at the MINOR level per 04_TRD §1 via compatible-release (~=).
+# Exact resolved patch versions are locked in requirements.lock (CLAUDE.md §3)
+# and reflected in 04_TRD §1.
+dependencies = [
+    "fastapi~=0.115.0",
+    "uvicorn[standard]~=0.30.0",
+    "gunicorn~=22.0.0",
+    "sqlalchemy[asyncio]~=2.0.0",
+    "alembic~=1.13.0",
+    "pydantic~=2.10.1",  # 04_TRD §1 said 2.9.x; bumped: mcp 1.2.x requires >=2.10.1
+    "pydantic-settings~=2.6.1",  # 04_TRD §1 said 2.5.x; bumped: mcp 1.2.x requires >=2.6.1
+    "asyncpg~=0.30.0",  # 04_TRD §1 said 0.29.x; bumped: 0.29 has no cp313 wheel (local venv is 3.13)
+    "celery~=5.4.0",
+    "redis~=5.0.0",
+    "langgraph~=0.2.0",
+    "openai~=1.40.0",
+    "google-genai~=1.0",
+    "mcp~=1.2.0",
+    "honcho~=2.0.0",
+    "httpx~=0.28.1",  # 04_TRD §1 said 0.27.x; bumped: google-genai 1.x requires >=0.28.1
+    "beautifulsoup4~=4.12.0",
+    "pyjwt~=2.9.0",
+    "passlib[bcrypt]==1.7.4",
+    "slowapi==0.1.9",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest~=8.0",
+    "pytest-asyncio~=0.24.0",
+    "ruff",
+    "black",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["app"]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+src = ["app", "tests"]
+
+[tool.ruff.lint]
+# E/F pyflakes+pycodestyle, I isort, B bugbear, UP pyupgrade, C4 comprehensions, ASYNC
+select = ["E", "F", "I", "B", "UP", "C4", "ASYNC"]
+ignore = ["B008"]  # FastAPI uses function calls (Depends/Query) in argument defaults
+
+[tool.black]
+target-version = ["py312"]
+line-length = 100
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["app/tests"]

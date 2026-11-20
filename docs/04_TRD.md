@@ -19,8 +19,8 @@
 | ASGI server | Uvicorn (+ Gunicorn in prod) | 0.30.x / 22.0.x |
 | ORM | SQLAlchemy (async) | 2.0.x |
 | Migrations | Alembic | 1.13.x |
-| Validation/serialization | Pydantic | 2.9.x |
-| DB driver | asyncpg | 0.29.x |
+| Validation/serialization | Pydantic | 2.10.x ¹ |
+| DB driver | asyncpg | 0.30.x ² |
 | Task queue | Celery | 5.4.x |
 | Beat scheduler | celery[beat] | 5.4.x |
 | Broker/cache | Redis | 7.4 (server) / redis-py 5.0.x |
@@ -29,14 +29,31 @@
 | Embeddings client | google-genai (Gemini `gemini-embedding-001`) | 1.x |
 | MCP server | mcp (official Python SDK) | 1.2.x |
 | Process manager (single-container deploy) | honcho (or supervisord) | 2.0.x |
-| HTTP client | httpx | 0.27.x |
+| HTTP client | httpx | 0.28.x ³ |
 | HTML parsing | beautifulsoup4 | 4.12.x |
 | Auth / JWT | PyJWT | 2.9.x |
 | Password hashing | passlib[bcrypt] | 1.7.4 |
 | Rate limiting | slowapi (or Redis token bucket) | 0.1.9 |
-| Settings | pydantic-settings | 2.5.x |
+| Settings | pydantic-settings | 2.6.x ⁴ |
 | Testing | pytest + pytest-asyncio + httpx test client | 8.x / 0.24.x |
 | Lint/format | ruff + black | latest pinned |
+
+> **Resolved patch versions (locked at P0-4, backend).** Exact pins live in `backend/requirements.lock`
+> (`pip freeze`); `backend/pyproject.toml` constrains at the minor via `~=`. First install into the
+> project venv (`backend/.venv`, **Python 3.13** — the docs target 3.12; `requires-python=">=3.12"`
+> admits both) resolved: fastapi 0.115.14 · uvicorn 0.30.6 · gunicorn 22.0.0 · sqlalchemy 2.0.58 ·
+> alembic 1.13.3 · **pydantic 2.10.6** · **pydantic-settings 2.6.1** · **asyncpg 0.30.0** · celery 5.4.0 ·
+> redis-py 5.0.8 · langgraph 0.2.76 · openai 1.40.8 · google-genai 1.75.0 · mcp 1.2.1 · honcho 2.0.0 ·
+> **httpx 0.28.1** · beautifulsoup4 4.12.3 · PyJWT 2.9.0 · passlib 1.7.4 (bcrypt 5.0.0) · slowapi 0.1.9 ·
+> pytest 8.4.2 · pytest-asyncio 0.24.0 · ruff 0.17.6 · black 26.10.1.
+>
+> **Four pins were raised from the original minors to resolve real conflicts — flagged, not silent:**
+> ¹ Pydantic 2.9→**2.10.x**: `mcp 1.2.x` requires `pydantic>=2.10.1`.
+> ² asyncpg 0.29→**0.30.x**: 0.29 ships no cp313 wheel and the local venv is Python 3.13 (0.30 adds it).
+> ³ httpx 0.27→**0.28.x**: `google-genai 1.x` requires `httpx>=0.28.1`.
+> ⁴ pydantic-settings 2.5→**2.6.x**: `mcp 1.2.x` requires `pydantic-settings>=2.6.1`.
+> All four stay within the same major and change no architectural choice; they are the minimal moves
+> that make the locked `mcp 1.2.x` + `google-genai 1.x` set installable on this runtime.
 
 ### Frontend
 | Concern | Choice | Version (minor) |
