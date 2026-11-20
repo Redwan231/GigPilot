@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * Minimal base styles to boot the app. The full CSS-variable design-token
+ * system (03_UI_Spec.md §2) — semantic tokens, light/dark theming, fonts —
+ * is implemented in task P3-1.
+ */
+:root {
+  color-scheme: dark;
+}
+
+body {
+  background: #0f172a;
+  color: #e8ecf1;
+}

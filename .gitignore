@@ -19,6 +19,7 @@ htmlcov/
 # --- Node / frontend ---
 node_modules/
 .next/
+next-env.d.ts
 out/
 dist/
 build/
