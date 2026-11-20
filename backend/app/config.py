@@ -22,6 +22,9 @@ class Settings(BaseSettings):
 
     # --- Database / Redis ---
     database_url: str = "postgresql+asyncpg://gigpilot:password@localhost:5432/gigpilot"
+    # Set true for managed hosts that enforce SSL (e.g. Supabase). Causes the
+    # engine to use ssl.create_default_context() on every connection.
+    database_ssl_require: bool = False
     redis_url: str = "redis://localhost:6379/0"
 
     # Per-request RLS tenant role. The session layer runs `SET LOCAL ROLE <this>`

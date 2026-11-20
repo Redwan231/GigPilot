@@ -15,6 +15,7 @@ Two session entry points:
   serve user-scoped queries.
 """
 
+import ssl
 from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
 
@@ -27,11 +28,11 @@ from sqlalchemy.ext.asyncio import (
 
 from app.config import settings
 
-engine = create_async_engine(
-    settings.database_url,
-    pool_pre_ping=True,
-    future=True,
-)
+_engine_kwargs: dict = {"pool_pre_ping": True, "future": True}
+if settings.database_ssl_require:
+    _engine_kwargs["connect_args"] = {"ssl": ssl.create_default_context()}
+
+engine = create_async_engine(settings.database_url, **_engine_kwargs)
 
 SessionLocal = async_sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
 
