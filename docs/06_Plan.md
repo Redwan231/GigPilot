@@ -143,5 +143,5 @@ Legend: `[ ]` todo · `[x]` done · each task notes the doc it derives from and 
 2026-11-20 | P4-12 | f39dd73 | Evals harness: 9/9 pass (5 injection-resistance, 2 scoring-accuracy, 2 voice-quality); report.json committed
 2026-11-20 | P4-13 | 6d2f570 | MCP smoke: 6/6 pass (bad-token→error, search_jobs, draft consumes credit, list_proposals, set_outcome, tenant isolation); deleted mcp/__init__.py to fix package shadowing
 2026-11-20 | P5-1 | 785e0d6 | Supabase + Upstash provisioned; SSL support added (database_ssl_require); verify_connections.py passed both
-2026-11-20 | P5-2 | (pending) | Dockerfile (root) + backend/Procfile (honcho: web+worker+beat) + backend/start.sh (alembic upgrade head then honcho start); CORS middleware + cross-domain SameSite=None cookie fix
-2026-11-20 | P5-3 | (pending) | CORSMiddleware with cors_origins config; SameSite=None in production for cross-domain Vercel→HF cookie
+2026-11-20 | P5-2 | 7f96627 | Dockerfile (root) + backend/Procfile (honcho: web+worker+beat) + backend/start.sh (alembic upgrade head then honcho start)
+2026-11-20 | P5-3 | 7f96627 | CORSMiddleware with cors_origins config; SameSite=None in production for cross-domain Vercel→HF cookie
