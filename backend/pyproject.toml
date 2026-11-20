@@ -33,6 +33,7 @@ dependencies = [
     "beautifulsoup4~=4.12.0",
     "pyjwt~=2.9.0",
     "passlib[bcrypt]==1.7.4",
+    "bcrypt>=4.1,<5",  # pin: passlib 1.7.4 is broken with bcrypt 5.x (04_TRD §1 note)
     "slowapi==0.1.9",
 ]
 

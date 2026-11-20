@@ -52,6 +52,9 @@
 > ² asyncpg 0.29→**0.30.x**: 0.29 ships no cp313 wheel and the local venv is Python 3.13 (0.30 adds it).
 > ³ httpx 0.27→**0.28.x**: `google-genai 1.x` requires `httpx>=0.28.1`.
 > ⁴ pydantic-settings 2.5→**2.6.x**: `mcp 1.2.x` requires `pydantic-settings>=2.6.1`.
+> ⁵ bcrypt pinned **>=4.1,<5** (resolved 4.3.0): `passlib[bcrypt] 1.7.4` breaks with bcrypt 5.x on
+> Python 3.13 (bcrypt 5.0 makes >72-byte input a hard error and passlib's backend probe trips it);
+> bcrypt is a transitive dep of passlib[bcrypt], not a new library.
 > All four stay within the same major and change no architectural choice; they are the minimal moves
 > that make the locked `mcp 1.2.x` + `google-genai 1.x` set installable on this runtime.
 
