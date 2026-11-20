@@ -1,17 +1,21 @@
 """Writing samples CRUD: POST/GET/DELETE /me/samples. Derives: US-A4.
 Size/count limits enforced (04_TRD §7.4: <=1MB/sample ~= 20k chars, <=5 samples).
-Samples are created under the tenant session for RLS; chunk embedding (P2-3) hooks
-into the create path later."""
+Samples are embedded on create (P2-3); chunks cascade-deleted with the sample."""
 
+import logging
 import uuid
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy import delete, func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.ai.embeddings import embed_chunks
 from app.api.deps import get_current_user_id, get_tenant_db
+from app.config import settings
 from app.db.models.sample import SampleChunk, WritingSample
 from app.schemas.samples import MAX_SAMPLES_PER_USER, SampleCreate, SampleOut
+
+log = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/me/samples", tags=["samples"])
 
@@ -59,6 +63,22 @@ async def create_sample(
     )
     db.add(sample)
     await db.flush()
+
+    if settings.gemini_api_key:
+        try:
+            chunks = await embed_chunks(sample.content)
+            for idx, content, embedding in chunks:
+                db.add(
+                    SampleChunk(
+                        sample_id=sample.id,
+                        user_id=user_id,
+                        chunk_index=idx,
+                        content=content,
+                        embedding=embedding,
+                    )
+                )
+        except Exception:
+            log.exception("Embedding failed for sample %s; saved without chunks", sample.id)
 
     return SampleOut(
         id=sample.id,

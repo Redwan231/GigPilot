@@ -36,7 +36,7 @@ Legend: `[ ]` todo · `[x]` done · each task notes the doc it derives from and 
 ## Phase 2 — Core API & Services (no UI yet)
 - [x] **P2-1** `me` endpoints: `GET /me`, `PATCH /me/profile` (bumps `profile_version`), onboarding completion. _Derives: US-A3, `02_AppFlow §4.4`._
 - [x] **P2-2** Writing samples: `POST/GET/DELETE /me/samples` (size/count limits). _Derives: US-A4._
-- [ ] **P2-3** `ai/embeddings.py` (Gemini `gemini-embedding-001` via google-genai) + chunking; embed samples on create, delete chunks on sample delete. _Check: chunks+vectors written, dim=768._
+- [x] **P2-3** `ai/embeddings.py` (Gemini `gemini-embedding-001` via google-genai) + chunking; embed samples on create, delete chunks on sample delete. _Check: chunks+vectors written, dim=768._
 - [ ] **P2-4** Adapters: `base.py` + 4 source adapters with unified `Job` normalize (`04_TRD §4.1`). _Check: each returns normalized Jobs from a fixture._
 - [ ] **P2-5** Celery app + beat; `aggregate_jobs` task: per-source isolation, upsert on `(platform, external_id)`, update `source_health`. _Derives: US-B1, `04_TRD §6`._
 - [ ] **P2-6** Jobs API: `GET /jobs` (filters: platform/category/skill/budget/min-score, sort newest|score), `GET /jobs/{id}`. _Derives: US-B1–B3, `02_AppFlow §4.5–4.6`._
@@ -111,4 +111,5 @@ Legend: `[ ]` todo · `[x]` done · each task notes the doc it derives from and 
 2026-11-20 | P1-9 | 2b5b293 | api/deps.py: get_current_user_id (verify Bearer JWT), get_tenant_db (tenant_session RLS GUC), get_current_user (privileged user load); core/rate_limit.py (slowapi Limiter wired into app); protected GET /me (api/routes/me.py). 3 deps tests: no token->401, bad token->401, valid->200
 2026-11-20 | P1-10 | b7d0b96 | RLS isolation gate (test_rls.py, 4 tests) GENUINELY PASS vs real Postgres under non-BYPASSRLS role: A sees only A; forged-id read of B -> nothing; forged INSERT user_id=B -> WITH CHECK reject (DBAPIError); forged UPDATE/DELETE -> 0 rows; API token maps to own user only. Full suite 24 passed
 2026-11-20 | P2-1 | b26ea2b | GET /me (full user+profile), PATCH /me/profile (upsert+version bump+onboarding completion); schemas/me.py + 6 tests pass
-2026-11-20 | P2-2 | 797487f | Writing samples POST/GET/DELETE /me/samples; size/count limits (20k chars, 5 max); RLS-scoped; 7 tests pass
+2026-11-20 | P2-2 | 2a26703 | Writing samples POST/GET/DELETE /me/samples; size/count limits (20k chars, 5 max); RLS-scoped; 7 tests pass
+2026-11-20 | P2-3 | e653581 | Gemini embeddings+chunking; embed on create; Vector bind/result processors; 6 tests (chunks+vectors dim=768 verified)

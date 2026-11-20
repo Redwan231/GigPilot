@@ -36,6 +36,14 @@ class Settings(BaseSettings):
     refresh_token_ttl_days: int = 7
     auth_auto_verify_email: bool = True
 
+    # --- AI ---
+    gemini_api_key: str = ""
+    embedding_model: str = "gemini-embedding-001"
+    embedding_dim: int = 768
+    llm_base_url: str = ""
+    llm_api_key: str = ""
+    llm_model: str = "glm-5.3-flash"
+
     # --- Limits (04_TRD §8) ---
     free_drafts_per_month: int = 30
     pro_drafts_per_month: int = 500

@@ -21,6 +21,22 @@ class Vector(UserDefinedType):
     def get_col_spec(self, **kw: object) -> str:
         return f"VECTOR({self.dim})"
 
+    def bind_processor(self, dialect):  # type: ignore[no-untyped-def]
+        def process(value):  # type: ignore[no-untyped-def]
+            if value is None:
+                return None
+            return "[" + ",".join(str(v) for v in value) + "]"
+        return process
+
+    def result_processor(self, dialect, coltype):  # type: ignore[no-untyped-def]
+        def process(value):  # type: ignore[no-untyped-def]
+            if value is None:
+                return None
+            if isinstance(value, str):
+                return [float(v) for v in value.strip("[]").split(",")]
+            return list(value)
+        return process
+
 
 def pg_enum(name: str, *labels: str) -> PgEnum:
     """A native ENUM column bound to an existing type (migrations own the type)."""
