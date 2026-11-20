@@ -12,6 +12,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.config import settings
 from app.core import security
+from app.core.rate_limit import limiter
 from app.db.models.user import RefreshToken, Subscription, User
 from app.db.session import system_session
 from app.schemas.auth import LoginRequest, SignupRequest, TokenResponse, UserPublic
@@ -104,7 +105,8 @@ async def signup(payload: SignupRequest, response: Response) -> TokenResponse:
 
 
 @router.post("/login", response_model=TokenResponse)
-async def login(payload: LoginRequest, response: Response) -> TokenResponse:
+@limiter.limit("10/minute")
+async def login(request: Request, payload: LoginRequest, response: Response) -> TokenResponse:
     async with system_session() as session:
         user = await session.scalar(select(User).where(User.email == payload.email))
         # Generic error — no user enumeration (04_TRD §7.2).
