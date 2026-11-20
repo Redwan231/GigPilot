@@ -71,7 +71,7 @@ python-dateutil==4.0.0
 python-dotenv==1.2.4
 pytokens==0.4.1
 PyYAML==6.0.3
-redis==5.0.8
+redis==6.1.0
 requests==2.34.2
 requests-toolbelt==1.0.0
 ruff==0.17.6
