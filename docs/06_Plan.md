@@ -44,14 +44,14 @@ Legend: `[ ]` todo · `[x]` done · each task notes the doc it derives from and 
 - [x] **P2-7b** `guardrails/`: `sanitize.py`, `injection.py` (delimit + detect prompt injection in job/sample text), `pii.py` (redact PII before embedding). All LLM-bound untrusted text passes through these. _Derives: `04_TRD §7b`. Check: injection-laced fixture does not alter model behavior._
 - [x] **P2-8** `services/scoring.py`: cheap skill-overlap pre-filter → AI score using the 4 data-honest dimensions `{skills, seniority, rate, freshness}` (terse JSON), cache in `scores` by `(user,job,profile_version)`, daily Redis cap. Endpoint `POST /jobs/{id}/score`. _Derives: US-C1/C3, `04_TRD §5, §5b`._
 - [ ] **P2-9** Score reasoning on demand: `GET /jobs/{id}/score/why` (lazy-generate + cache `reasoning`). _Derives: US-C2._
-- [ ] **P2-10** `agents/`: `GigPilotState`, LangGraph `graph.py` (nodes: retrieve_voice → draft; conditional entry from score), node impls. _Derives: `04_TRD §2`._
-- [ ] **P2-11** `services/drafting.py`: Voice RAG (per-user ANN top-k) OR cold-start template; invoked via LangGraph. Endpoint `POST /jobs/{id}/draft`. _Derives: US-D1, PRD §6._
-- [ ] **P2-12** `services/credits.py`: atomic quota check+increment on draft success only; monthly reset logic. _Derives: US-D4/F1–F3, `05_Schema §3.8`._
-- [ ] **P2-13** Proposals API: create (on draft "mark as used"), `GET/PATCH/DELETE /proposals`, set outcome. _Derives: US-D3/E1, `02_AppFlow §4.7–4.8`._
-- [ ] **P2-14** `services/stats.py` + `GET /me/stats` (win-rate, counts, won/lost avg score). _Derives: US-E2._
-- [ ] **P2-15** Feedback loop (bounded, no training): inject one line of the user's recent won/lost/no-response stats + top winning skills into the scoring prompt. _Derives: US-E3, `04_TRD §5c`. Do NOT build training/weights._
-- [ ] **P2-16** `GET /health`, `GET /health/ready`. _Check: ready fails when DB/Redis down._
-- [ ] **P2-17** `mcp/server.py`: MCP server exposing `search_jobs`, `score_job`, `draft_proposal`, `list_proposals`, `set_outcome` — thin wrappers over existing `services/`, auth via `MCP_AUTH_TOKEN`→user, enforcing the same tenant scope/credits/caps/guardrails. _Derives: `04_TRD §10`. Check: a tool call runs under the user and consumes a credit on draft; never bypasses RLS._
+- [x] **P2-10** `agents/`: `GigPilotState`, LangGraph `graph.py` (nodes: retrieve_voice → draft; conditional entry from score), node impls. _Derives: `04_TRD §2`._
+- [x] **P2-11** `services/drafting.py`: Voice RAG (per-user ANN top-k) OR cold-start template; invoked via LangGraph. Endpoint `POST /jobs/{id}/draft`. _Derives: US-D1, PRD §6._
+- [x] **P2-12** `services/credits.py`: atomic quota check+increment on draft success only; monthly reset logic. _Derives: US-D4/F1–F3, `05_Schema §3.8`._
+- [x] **P2-13** Proposals API: create (on draft "mark as used"), `GET/PATCH/DELETE /proposals`, set outcome. _Derives: US-D3/E1, `02_AppFlow §4.7–4.8`._
+- [x] **P2-14** `services/stats.py` + `GET /me/stats` (win-rate, counts, won/lost avg score). _Derives: US-E2._
+- [x] **P2-15** Feedback loop (bounded, no training): inject one line of the user's recent won/lost/no-response stats + top winning skills into the scoring prompt. _Derives: US-E3, `04_TRD §5c`. Do NOT build training/weights._
+- [x] **P2-16** `GET /health`, `GET /health/ready`. _Check: ready fails when DB/Redis down._
+- [x] **P2-17** `mcp/server.py`: MCP server exposing `search_jobs`, `score_job`, `draft_proposal`, `list_proposals`, `set_outcome` — thin wrappers over existing `services/`, auth via `MCP_AUTH_TOKEN`→user, enforcing the same tenant scope/credits/caps/guardrails. _Derives: `04_TRD §10`. Check: a tool call runs under the user and consumes a credit on draft; never bypasses RLS._
 
 ## Phase 3 — UI Integration
 - [ ] **P3-1** Tailwind config + `globals.css` CSS variables from `03_UI_Spec.md §2–4`; fonts (Space Grotesk/Inter/JetBrains Mono). _Check: tokens resolve in both themes._
@@ -119,3 +119,12 @@ Legend: `[ ]` todo · `[x]` done · each task notes the doc it derives from and 
 2026-11-20 | P2-7 | 06c0dc0 | GLM 5.3 Flash LLM client (chat_json+chat_text); JSON mode, retries, ai_usage logging; 3 tests pass
 2026-11-20 | P2-7b | f118e34 | Guardrails: sanitize.py, injection.py (detect+strip+delimit), pii.py (redact email/phone); 11 tests pass incl injection-laced fixture
 2026-11-20 | P2-8 | e31ca76 | Scoring service: skill-overlap pre-filter, AI 4-dim score, cache by (user,job,profile_version), daily Redis cap, POST /jobs/{id}/score; 10 tests pass
+2026-11-20 | P2-9 | cd9e28d | Lazy reasoning GET /jobs/{id}/score/why; cached in score.reasoning; 3 tests pass
+2026-11-20 | P2-10 | pending | LangGraph agents: GigPilotState, retrieve_voice + generate_draft nodes, graph.py; 3 tests pass
+2026-11-20 | P2-11 | pending | Drafting service: voice RAG (top-5 ANN) + cold-start template; POST /jobs/{id}/draft via LangGraph
+2026-11-20 | P2-12 | pending | Credits service: atomic quota check+increment, release on failure, monthly reset
+2026-11-20 | P2-13 | pending | Proposals API: draft, GET/PATCH/DELETE /proposals, set outcome; 5 tests pass
+2026-11-20 | P2-14 | pending | Stats service + GET /me/stats: win-rate, counts, avg scores; 2 tests pass
+2026-11-20 | P2-15 | pending | Feedback loop: outcome stats injected as one line into scoring prompt
+2026-11-20 | P2-16 | pending | GET /health + GET /health/ready (DB+Redis probe); 2 tests pass
+2026-11-20 | P2-17 | pending | MCP server: search_jobs, score_job, draft_proposal, list_proposals, set_outcome; auth via MCP_AUTH_TOKEN

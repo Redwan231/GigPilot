@@ -4,7 +4,7 @@ from fastapi import FastAPI
 from slowapi.errors import RateLimitExceeded
 from slowapi.middleware import SlowAPIMiddleware
 
-from app.api.routes import auth, jobs, me, samples
+from app.api.routes import auth, health, jobs, me, proposals, samples
 from app.core.rate_limit import limiter
 
 
@@ -26,6 +26,8 @@ def create_app() -> FastAPI:
     app.include_router(me.router)
     app.include_router(samples.router)
     app.include_router(jobs.router)
+    app.include_router(proposals.router)
+    app.include_router(health.router)
     return app
 
 

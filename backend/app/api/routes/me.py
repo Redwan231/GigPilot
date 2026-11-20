@@ -9,6 +9,9 @@ from app.api.deps import get_current_user, get_current_user_id, get_tenant_db
 from app.db.models.user import Profile, User
 from app.db.session import system_session
 from app.schemas.me import MeOut, ProfileOut, ProfileUpsert
+from app.services.stats import get_user_stats
+
+import uuid
 
 router = APIRouter(tags=["me"])
 
@@ -81,3 +84,11 @@ async def upsert_profile(
         profile_complete=db_user.profile_complete,
         profile=_profile_out(profile),
     )
+
+
+@router.get("/me/stats")
+async def read_stats(
+    user_id: uuid.UUID = Depends(get_current_user_id),
+) -> dict:
+    async with system_session() as session:
+        return await get_user_stats(user_id, session)

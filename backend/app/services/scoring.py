@@ -14,6 +14,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.ai.llm import chat_json, chat_text
 from app.config import settings
 from app.db.models.job import Job
+from app.db.models.proposal import Proposal
 from app.db.models.score import Score
 from app.db.models.user import Profile, Subscription
 from app.guardrails.sanitize import sanitize_text
@@ -75,6 +76,29 @@ async def _check_daily_cap(user_id: uuid.UUID, tier: str) -> bool:
         return True
 
 
+async def _get_feedback_line(user_id: uuid.UUID, session: AsyncSession) -> str:
+    """Build one-line outcome stats for feedback loop (04_TRD §5c)."""
+    try:
+        from sqlalchemy import func
+
+        won = await session.scalar(
+            select(func.count()).where(Proposal.user_id == user_id, Proposal.outcome == "won")
+        ) or 0
+        lost = await session.scalar(
+            select(func.count()).where(Proposal.user_id == user_id, Proposal.outcome == "lost")
+        ) or 0
+        no_resp = await session.scalar(
+            select(func.count()).where(Proposal.user_id == user_id, Proposal.outcome == "no_response")
+        ) or 0
+
+        if won + lost + no_resp == 0:
+            return ""
+
+        return f"This user's recent outcomes: won {won}, lost {lost}, no-response {no_resp}."
+    except Exception:
+        return ""
+
+
 async def score_job(
     user_id: uuid.UUID,
     job_id: uuid.UUID,
@@ -128,6 +152,8 @@ async def score_job(
         f"Posted: {job.posted_at.isoformat() if job.posted_at else 'unknown'}."
     )
 
+    feedback_line = await _get_feedback_line(user_id, session)
+
     messages = [
         {"role": "system", "content": _SCORING_SYSTEM},
         {
@@ -135,7 +161,8 @@ async def score_job(
             "content": (
                 f"Freelancer profile:\n{profile_summary}\n\n"
                 f"Job posting:\n{job_summary}\n\n"
-                f"Pre-computed skill overlap: {overlap:.0%}"
+                f"Pre-computed skill overlap: {overlap:.0%}\n\n"
+                f"{feedback_line}"
             ),
         },
     ]
