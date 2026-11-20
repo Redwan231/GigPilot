@@ -81,7 +81,7 @@ Legend: `[ ]` todo · `[x]` done · each task notes the doc it derives from and 
 - [x] **P4-10** e2e smoke (Playwright): signup → onboarding → score → draft → mark used → set outcome → dashboard. _Derives: `02_AppFlow §5`._
 - [x] **P4-11** Seed/demo script: create a demo Pro user + fetch jobs, so judges see a populated app. _Derives: PRD §5._
 - [x] **P4-12** Evals harness `evals/run_evals.py`: (a) LLM-as-judge voice-draft vs generic baseline, (b) scoring accuracy vs labeled fixtures, (c) injection-resistance tests. Commit a report under `evals/`. _Derives: `04_TRD §11-evals`. Check: report generated; injection tests pass._
-- [ ] **P4-13** MCP smoke: connect the server from a local MCP client (Claude Desktop/Cursor), run `search_jobs`→`score_job`→`draft_proposal`; verify auth + credit enforcement. _Derives: `04_TRD §10`._
+- [x] **P4-13** MCP smoke: connect the server from a local MCP client (Claude Desktop/Cursor), run `search_jobs`→`score_job`→`draft_proposal`; verify auth + credit enforcement. _Derives: `04_TRD §10`._
 
 ## Phase 5 — Deploy (demo): no-card, free, always-on (`04_TRD §9`)
 - [ ] **P5-1** Provision free managed services (no card): **Supabase** Postgres (`create extension vector;`), **Upstash** Redis. Put URLs in secrets. _Check: backend connects to both._
@@ -129,3 +129,16 @@ Legend: `[ ]` todo · `[x]` done · each task notes the doc it derives from and 
 2026-11-20 | P2-16 | 7668207 | GET /health + GET /health/ready (DB+Redis probe); 2 tests pass
 2026-11-20 | P2-17 | 7668207 | MCP server: search_jobs, score_job, draft_proposal, list_proposals, set_outcome; auth via MCP_AUTH_TOKEN
 2026-11-20 | P3-1..P3-13 | 4549b35 | Phase 3 UI: Tailwind tokens, UI primitives, API client+auth ctx, middleware, login/signup/onboarding/app shell/feed/job detail/proposals/dashboard/settings/404+error boundary+offline toast
+2026-11-20 | P4-1 | (phase4) | Credits edge cases: 0 credits→402, AI fail releases credit, monthly reset, success decrements; 4 tests pass
+2026-11-20 | P4-2 | (phase4) | Scoring daily cap: Redis down→fail-open, cap exceeded→429, cache hit skips cap; 4 tests pass
+2026-11-20 | P4-3 | (phase4) | Cold-start drafting: no samples→voice_matched=False, cold-start prompt used, chunks path uses voice prompt; 4 tests pass
+2026-11-20 | P4-4 | (phase4) | Dedup: same (platform,external_id)→1 row, upsert updates title, different platform+same id→2 rows; 3 tests pass
+2026-11-20 | P4-5 | (phase4) | Adapter circuit breaker: one source down others succeed, consecutive_failures increments, status=down after 3, recovery resets; 4 tests pass
+2026-11-20 | P4-6 | (phase4) | Auth hardening: slowapi rate limit on /auth/login (10/min), refresh reuse revokes all, expired/malformed/missing JWT→401; 5 tests pass
+2026-11-20 | P4-7 | (phase4) | RLS pen-test at API level: A cannot read/update/delete B's proposals or samples, forged user_id in body ignored; 7 tests pass
+2026-11-20 | P4-8 | (phase4) | Cost guard: same profile_version→LLM called once, version bump→new call, ai_usage row written with cost_usd>0; 4 tests pass
+2026-11-20 | P4-9 | (phase4) | Input abuse: 25k sample→422, whitespace-only→422, 6th sample→409, XSS stripped; 8 tests pass
+2026-11-20 | P4-10 | (phase4) | Playwright e2e smoke: playwright.config.ts + e2e/smoke.spec.ts (signup→onboarding→score→draft→outcome→dashboard)
+2026-11-20 | P4-11 | ae3d34a | Demo seed: demo@gigpilot.app Pro user, 5 jobs, 2 samples, 3 proposals with outcomes; idempotent
+2026-11-20 | P4-12 | f39dd73 | Evals harness: 9/9 pass (5 injection-resistance, 2 scoring-accuracy, 2 voice-quality); report.json committed
+2026-11-20 | P4-13 | (pending) | MCP smoke: 6/6 pass (bad-token→error, search_jobs, draft consumes credit, list_proposals, set_outcome, tenant isolation); deleted mcp/__init__.py to fix package shadowing
