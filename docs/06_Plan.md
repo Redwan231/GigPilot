@@ -39,7 +39,7 @@ Legend: `[ ]` todo · `[x]` done · each task notes the doc it derives from and 
 - [x] **P2-3** `ai/embeddings.py` (Gemini `gemini-embedding-001` via google-genai) + chunking; embed samples on create, delete chunks on sample delete. _Check: chunks+vectors written, dim=768._
 - [x] **P2-4** Adapters: `base.py` + 4 source adapters with unified `Job` normalize (`04_TRD §4.1`). _Check: each returns normalized Jobs from a fixture._
 - [x] **P2-5** Celery app + beat; `aggregate_jobs` task: per-source isolation, upsert on `(platform, external_id)`, update `source_health`. _Derives: US-B1, `04_TRD §6`._
-- [ ] **P2-6** Jobs API: `GET /jobs` (filters: platform/category/skill/budget/min-score, sort newest|score), `GET /jobs/{id}`. _Derives: US-B1–B3, `02_AppFlow §4.5–4.6`._
+- [x] **P2-6** Jobs API: `GET /jobs` (filters: platform/category/skill/budget/min-score, sort newest|score), `GET /jobs/{id}`. _Derives: US-B1–B3, `02_AppFlow §4.5–4.6`._
 - [ ] **P2-7** `ai/llm.py`: GLM 5.3 Flash client (OpenAI-compatible), JSON mode, timeouts/retries, writes `ai_usage`. _Check: mock + one live smoke._
 - [ ] **P2-7b** `guardrails/`: `sanitize.py`, `injection.py` (delimit + detect prompt injection in job/sample text), `pii.py` (redact PII before embedding). All LLM-bound untrusted text passes through these. _Derives: `04_TRD §7b`. Check: injection-laced fixture does not alter model behavior._
 - [ ] **P2-8** `services/scoring.py`: cheap skill-overlap pre-filter → AI score using the 4 data-honest dimensions `{skills, seniority, rate, freshness}` (terse JSON), cache in `scores` by `(user,job,profile_version)`, daily Redis cap. Endpoint `POST /jobs/{id}/score`. _Derives: US-C1/C3, `04_TRD §5, §5b`._
@@ -114,4 +114,5 @@ Legend: `[ ]` todo · `[x]` done · each task notes the doc it derives from and 
 2026-11-20 | P2-2 | 2a26703 | Writing samples POST/GET/DELETE /me/samples; size/count limits (20k chars, 5 max); RLS-scoped; 7 tests pass
 2026-11-20 | P2-3 | 92a9e67 | Gemini embeddings+chunking; embed on create; Vector bind/result processors; 6 tests (chunks+vectors dim=768 verified)
 2026-11-20 | P2-4 | 0833242 | Adapters: base ABC + remoteok/remotive/himalayas/wwr; unified RawJob normalize; 8 fixture tests pass
-2026-11-20 | P2-5 | c2c6891 | Celery app+beat+aggregate_jobs; per-source isolation, idempotent upsert, source_health updates; 2 tests pass
+2026-11-20 | P2-5 | 9fa9e6a | Celery app+beat+aggregate_jobs; per-source isolation, idempotent upsert, source_health updates; 2 tests pass
+2026-11-20 | P2-6 | 51f2ad0 | Jobs API GET /jobs (filters/sort/pagination) + GET /jobs/{id}; NULL-budget inclusion; 9 tests pass
