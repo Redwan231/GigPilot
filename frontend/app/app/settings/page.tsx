@@ -56,8 +56,8 @@ export default function SettingsPage() {
   const [deleteAccountConfirm, setDeleteAccountConfirm] = useState(false);
   const [newSample, setNewSample] = useState("");
 
-  const profileForm = useForm({ resolver: zodResolver(profileSchema) });
-  const pwForm = useForm({ resolver: zodResolver(pwSchema) });
+  const profileForm = useForm<z.infer<typeof profileSchema>>({ resolver: zodResolver(profileSchema) });
+  const pwForm = useForm<z.infer<typeof pwSchema>>({ resolver: zodResolver(pwSchema) });
 
   const { data: samples, isLoading: samplesLoading } = useQuery<Sample[]>({
     queryKey: ["samples"],

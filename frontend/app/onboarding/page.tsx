@@ -51,7 +51,7 @@ export default function OnboardingPage() {
   const [stylePrefs, setStylePrefs] = useState({ tone: "friendly", length: "medium", greeting: "Hi" });
   const [submitting, setSubmitting] = useState(false);
 
-  const form = useForm({ resolver: zodResolver(profileSchema) });
+  const form = useForm<z.infer<typeof profileSchema>>({ resolver: zodResolver(profileSchema) });
 
   async function handleProfileNext(data: z.infer<typeof profileSchema>) {
     try {
