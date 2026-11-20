@@ -52,9 +52,7 @@ def create_access_token(
 def decode_access_token(token: str) -> dict[str, Any]:
     """Verify signature + expiry and return the claims. Raises jwt.PyJWTError
     (ExpiredSignatureError / InvalidTokenError) on failure."""
-    claims: dict[str, Any] = jwt.decode(
-        token, settings.secret_key, algorithms=[ALGORITHM]
-    )
+    claims: dict[str, Any] = jwt.decode(token, settings.secret_key, algorithms=[ALGORITHM])
     if claims.get("type") != ACCESS_TOKEN_TYPE:
         raise jwt.InvalidTokenError("wrong token type")
     return claims

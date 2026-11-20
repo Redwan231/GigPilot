@@ -109,6 +109,9 @@ class RefreshToken(Base):
     token_hash: Mapped[str] = mapped_column(Text, nullable=False, unique=True)
     expires_at: Mapped[datetime.datetime] = mapped_column(TIMESTAMP(timezone=True), nullable=False)
     revoked: Mapped[bool] = mapped_column(Boolean, nullable=False, server_default=text("false"))
+    revoked_at: Mapped[datetime.datetime | None] = mapped_column(
+        TIMESTAMP(timezone=True), nullable=True
+    )
     created_at: Mapped[datetime.datetime] = mapped_column(
         TIMESTAMP(timezone=True), nullable=False, server_default=_NOW
     )

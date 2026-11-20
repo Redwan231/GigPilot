@@ -33,9 +33,7 @@ def test_access_token_roundtrip() -> None:
 
 
 def test_access_token_expired() -> None:
-    token = security.create_access_token(
-        uuid.uuid4(), expires_delta=datetime.timedelta(seconds=-1)
-    )
+    token = security.create_access_token(uuid.uuid4(), expires_delta=datetime.timedelta(seconds=-1))
     with pytest.raises(jwt.ExpiredSignatureError):
         security.decode_access_token(token)
 

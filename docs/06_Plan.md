@@ -29,7 +29,7 @@ Legend: `[ ]` todo · `[x]` done · each task notes the doc it derives from and 
 - [x] **P1-5** Migration: enable RLS + `tenant_isolation` policies on all user-owned tables (`05_Schema.md §5.2`). _Check: unset GUC → zero rows._
 - [x] **P1-6** SQLAlchemy models mirroring every table (field names == columns). _Check: `Base.metadata` matches migration._
 - [x] **P1-7** `core/security.py`: bcrypt hashing, JWT sign/verify (HS256), opaque refresh token gen + SHA-256. _Check: unit tests._
-- [ ] **P1-8** Auth endpoints: `signup`, `login`, `refresh` (rotation + reuse-detection), `logout` (`05_Schema.md §6`). _Check: integration tests cover happy + 401 + rotation._
+- [x] **P1-8** Auth endpoints: `signup`, `login`, `refresh` (rotation + reuse-detection), `logout` (`05_Schema.md §6`). _Check: integration tests cover happy + 401 + rotation._
 - [ ] **P1-9** `api/deps.py`: `get_current_user` (verify JWT, set RLS GUC), rate-limit deps. _Check: protected route rejects no/invalid token._
 - [ ] **P1-10** RLS isolation test: user A cannot read user B's rows even with forged `user_id` in body. _Check: test passes (critical security gate)._
 
@@ -107,3 +107,4 @@ Legend: `[ ]` todo · `[x]` done · each task notes the doc it derives from and 
 2026-11-20 | P1-5 | 8dcbe32 | Migration a59ea7d2435e: ENABLE+FORCE RLS + tenant_isolation policy on 7 user-owned tables; created non-BYPASSRLS role gigpilot_app + grants (DML user-owned, SELECT jobs/source_health). Probe: unset GUC->0 rows, GUC=A->only A. up/down/up clean
 2026-11-20 | P1-6 | 2f3ad15 | ORM models for all 11 tables (app/db/models/*, one file per aggregate) + db/types.py (Vector custom type, no pgvector dep; pg_enum create_type=False). Verified: all 11 tables' columns == DB columns built by migrations (PASS); ruff clean
 2026-11-20 | P1-7 | 9f538d4 | core/security.py: bcrypt(cost12) hash/verify, HS256 access JWT create/decode(type+exp check), opaque refresh token + sha256. 6 unit tests pass. Pinned bcrypt<5 (passlib 1.7.4 breaks with bcrypt 5 on py3.13) -> lock refrozen, 04_TRD §1 note ⁵
+2026-11-20 | P1-8 | edb714f | Auth endpoints (schemas/auth, main app factory, api/routes/auth, conftest w/ NullPool + truncate). signup/login/refresh(rotation+reuse-detect+10s grace)/logout on system_session. Migration 099ba0111c1e adds refresh_tokens.revoked_at (reconciles §3.10 w/ §6). 10 integration + 6 unit tests pass (happy/401/rotation/reuse/logout-final)
