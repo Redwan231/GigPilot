@@ -141,4 +141,4 @@ Legend: `[ ]` todo · `[x]` done · each task notes the doc it derives from and 
 2026-11-20 | P4-10 | (phase4) | Playwright e2e smoke: playwright.config.ts + e2e/smoke.spec.ts (signup→onboarding→score→draft→outcome→dashboard)
 2026-11-20 | P4-11 | ae3d34a | Demo seed: demo@gigpilot.app Pro user, 5 jobs, 2 samples, 3 proposals with outcomes; idempotent
 2026-11-20 | P4-12 | f39dd73 | Evals harness: 9/9 pass (5 injection-resistance, 2 scoring-accuracy, 2 voice-quality); report.json committed
-2026-11-20 | P4-13 | (pending) | MCP smoke: 6/6 pass (bad-token→error, search_jobs, draft consumes credit, list_proposals, set_outcome, tenant isolation); deleted mcp/__init__.py to fix package shadowing
+2026-11-20 | P4-13 | 6d2f570 | MCP smoke: 6/6 pass (bad-token→error, search_jobs, draft consumes credit, list_proposals, set_outcome, tenant isolation); deleted mcp/__init__.py to fix package shadowing
