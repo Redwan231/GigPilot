@@ -15,7 +15,7 @@ Legend: `[ ]` todo · `[x]` done · each task notes the doc it derives from and 
 
 ## Phase 0 — Repo & Tooling Foundation
 - [x] **P0-1** Init monorepo structure per `04_TRD.md §3` (backend/, frontend/, docs/, root files). _Check: tree matches._
-- [ ] **P0-2** Add `docker-compose.yml` with services: `db` (pgvector/pgvector:pg16), `redis` (7.4), `backend`, `worker`, `beat`. _Check: `docker compose config` valid._
+- [x] **P0-2** Add `docker-compose.yml` with services: `db` (pgvector/pgvector:pg16), `redis` (7.4), `backend`, `worker`, `beat`. _Check: `docker compose config` valid._
 - [x] **P0-3** Add `.env.example` (all keys from `04_TRD.md §8`) and git-ignored `.env`. _Check: no secrets committed._
 - [ ] **P0-4** Backend `pyproject.toml` with pinned deps (`04_TRD.md §1`); ruff+black config. _Check: `pip install` resolves, lint runs._
 - [ ] **P0-5** Frontend `create-next-app` (TS, App Router, Tailwind); add deps (`04_TRD.md §1`). _Check: dev server boots._
@@ -95,4 +95,5 @@ Legend: `[ ]` todo · `[x]` done · each task notes the doc it derives from and 
 ## Progress Log (agent appends one line per completed task)
 <!-- format: YYYY-MM-DD | task-id | commit-sha | note -->
 2026-11-20 | P0-1 | 3177cb7 | Monorepo skeleton: backend/app/* packages, frontend/*, migrations/, .cursorrules (mirror), .gitignore; tree matches 04_TRD §3
+2026-11-20 | P0-2 | 4ef82d6 | docker-compose.yml: db(pgvector:pg16)+redis(7.4)+backend+worker+beat; `docker compose config` valid
 2026-11-20 | P0-3 | ba8a7aa | .env.example with all 04_TRD §8 keys (dummy values); .env git-ignored; done before P0-2 per user request
