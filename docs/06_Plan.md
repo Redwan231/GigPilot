@@ -75,7 +75,7 @@ Legend: `[ ]` todo · `[x]` done · each task notes the doc it derives from and 
 - [x] **P4-4** Dedup test: same job from two sources stored once. _Derives: `04_TRD §6`._
 - [x] **P4-5** Adapter-down test: one source errors, aggregation still succeeds, `source_health` updated. _Derives: `04_TRD §6`._
 - [x] **P4-6** Auth hardening: brute-force rate limit, refresh reuse → full revoke, expired → `/login?expired=1`. _Derives: `04_TRD §7`._
-- [ ] **P4-7** RLS penetration test (re-assert P1-10 at API level). _Derives: `05_Schema §5`._
+- [x] **P4-7** RLS penetration test (re-assert P1-10 at API level). _Derives: `05_Schema §5`._
 - [ ] **P4-8** Cost guard test: unchanged (user,job,profile_version) is NOT re-scored; `ai_usage` rows written with cost. _Derives: `04_TRD §5`._
 - [ ] **P4-9** Input abuse: oversized sample/upload rejected; XSS in job/AI text not executed on render. _Derives: `04_TRD §7`._
 - [ ] **P4-10** e2e smoke (Playwright): signup → onboarding → score → draft → mark used → set outcome → dashboard. _Derives: `02_AppFlow §5`._
