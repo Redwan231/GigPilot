@@ -1,7 +1,8 @@
 """Job scoring service (04_TRD §5, §5b).
 
 Cheap skill-overlap pre-filter → AI score (4 data-honest dimensions) →
-cache in `scores` by (user, job, profile_version), daily Redis cap."""
+cache in `scores` by (user, job, profile_version), daily Redis cap.
+Lazy reasoning generation on "Why?" (P2-9)."""
 
 import logging
 import uuid
@@ -10,7 +11,7 @@ from datetime import date
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.ai.llm import chat_json
+from app.ai.llm import chat_json, chat_text
 from app.config import settings
 from app.db.models.job import Job
 from app.db.models.score import Score
@@ -168,3 +169,46 @@ async def score_job(
     session.add(score_row)
     await session.flush()
     return score_row
+
+
+_REASONING_SYSTEM = """You are a job-fit analyst. Given a freelancer's score for a job, explain WHY in 2-4 sentences.
+
+Reference the four dimensions (skills match, seniority fit, rate/budget fit, freshness) and their sub-scores.
+Be concise, honest, and data-grounded. Do NOT mention data you don't have (client history, proposal counts)."""
+
+
+async def generate_reasoning(
+    score: Score,
+    session: AsyncSession,
+) -> str:
+    """Lazy-generate natural-language reasoning for a score. Caches in score.reasoning."""
+    if score.reasoning:
+        return score.reasoning
+
+    job = await session.get(Job, score.job_id)
+    if job is None:
+        raise ValueError("Job not found")
+
+    dims = score.dimensions or {}
+    prompt = (
+        f"Job: {job.title}\n"
+        f"Overall score: {score.score}/100 (confidence: {score.confidence})\n"
+        f"Dimensions: skills={dims.get('skills')}, seniority={dims.get('seniority')}, "
+        f"rate={dims.get('rate')}, freshness={dims.get('freshness')}\n\n"
+        f"Explain this score briefly."
+    )
+
+    reasoning = await chat_text(
+        [
+            {"role": "system", "content": _REASONING_SYSTEM},
+            {"role": "user", "content": prompt},
+        ],
+        user_id=str(score.user_id),
+        operation="score_reasoning",
+        temperature=0.4,
+        max_tokens=256,
+    )
+
+    score.reasoning = reasoning.strip()
+    await session.flush()
+    return score.reasoning

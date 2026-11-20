@@ -118,4 +118,4 @@ Legend: `[ ]` todo · `[x]` done · each task notes the doc it derives from and 
 2026-11-20 | P2-6 | b76fbd5 | Jobs API GET /jobs (filters/sort/pagination) + GET /jobs/{id}; NULL-budget inclusion; 9 tests pass
 2026-11-20 | P2-7 | 06c0dc0 | GLM 5.3 Flash LLM client (chat_json+chat_text); JSON mode, retries, ai_usage logging; 3 tests pass
 2026-11-20 | P2-7b | f118e34 | Guardrails: sanitize.py, injection.py (detect+strip+delimit), pii.py (redact email/phone); 11 tests pass incl injection-laced fixture
-2026-11-20 | P2-8 | pending | Scoring service: skill-overlap pre-filter, AI 4-dim score, cache by (user,job,profile_version), daily Redis cap, POST /jobs/{id}/score; 10 tests pass
+2026-11-20 | P2-8 | e31ca76 | Scoring service: skill-overlap pre-filter, AI 4-dim score, cache by (user,job,profile_version), daily Redis cap, POST /jobs/{id}/score; 10 tests pass

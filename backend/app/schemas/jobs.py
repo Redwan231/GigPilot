@@ -39,6 +39,13 @@ class JobDetailOut(JobOut):
     user_score: ScoreOut | None = None
 
 
+class ReasoningOut(BaseModel):
+    score_id: uuid.UUID
+    score: int
+    reasoning: str
+    dimensions: dict
+
+
 class JobListOut(BaseModel):
     items: list[JobOut]
     next_cursor: str | None = None

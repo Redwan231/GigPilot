@@ -13,8 +13,8 @@ from app.api.deps import get_current_user_id, get_tenant_db
 from app.db.models.job import Job
 from app.db.models.score import Score
 from app.db.session import system_session
-from app.schemas.jobs import JobDetailOut, JobListOut, JobOut, ScoreOut
-from app.services.scoring import score_job
+from app.schemas.jobs import JobDetailOut, JobListOut, JobOut, ReasoningOut, ScoreOut
+from app.services.scoring import generate_reasoning, score_job
 
 router = APIRouter(prefix="/jobs", tags=["jobs"])
 
@@ -113,6 +113,40 @@ async def score_job_endpoint(
             reasoning=s.reasoning,
             profile_version=s.profile_version,
             created_at=s.created_at,
+        )
+
+
+@router.get("/{job_id}/score/why", response_model=ReasoningOut)
+async def get_score_reasoning(
+    job_id: uuid.UUID,
+    user_id: uuid.UUID = Depends(get_current_user_id),
+) -> ReasoningOut:
+    async with system_session() as session:
+        score = await session.scalar(
+            select(Score)
+            .where(Score.user_id == user_id, Score.job_id == job_id)
+            .order_by(Score.created_at.desc())
+            .limit(1)
+        )
+        if score is None:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Score this job first.",
+            )
+
+        try:
+            reasoning = await generate_reasoning(score, session)
+        except Exception as exc:
+            raise HTTPException(
+                status_code=status.HTTP_502_BAD_GATEWAY,
+                detail=f"Failed to generate reasoning: {exc}",
+            )
+
+        return ReasoningOut(
+            score_id=score.id,
+            score=score.score,
+            reasoning=reasoning,
+            dimensions=score.dimensions,
         )
 
 
