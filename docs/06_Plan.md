@@ -73,7 +73,7 @@ Legend: `[ ]` todo · `[x]` done · each task notes the doc it derives from and 
 - [x] **P4-2** Scoring cap test: daily cap blocks with reset messaging. _Derives: `02_AppFlow §6`._
 - [x] **P4-3** Cold-start path test: no samples → template draft, banner shown, `voice_matched=false`. _Derives: PRD §6._
 - [x] **P4-4** Dedup test: same job from two sources stored once. _Derives: `04_TRD §6`._
-- [ ] **P4-5** Adapter-down test: one source errors, aggregation still succeeds, `source_health` updated. _Derives: `04_TRD §6`._
+- [x] **P4-5** Adapter-down test: one source errors, aggregation still succeeds, `source_health` updated. _Derives: `04_TRD §6`._
 - [ ] **P4-6** Auth hardening: brute-force rate limit, refresh reuse → full revoke, expired → `/login?expired=1`. _Derives: `04_TRD §7`._
 - [ ] **P4-7** RLS penetration test (re-assert P1-10 at API level). _Derives: `05_Schema §5`._
 - [ ] **P4-8** Cost guard test: unchanged (user,job,profile_version) is NOT re-scored; `ai_usage` rows written with cost. _Derives: `04_TRD §5`._
