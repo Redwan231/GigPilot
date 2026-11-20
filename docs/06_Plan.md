@@ -43,7 +43,7 @@ Legend: `[ ]` todo · `[x]` done · each task notes the doc it derives from and 
 - [x] **P2-7** `ai/llm.py`: GLM 5.3 Flash client (OpenAI-compatible), JSON mode, timeouts/retries, writes `ai_usage`. _Check: mock + one live smoke._
 - [x] **P2-7b** `guardrails/`: `sanitize.py`, `injection.py` (delimit + detect prompt injection in job/sample text), `pii.py` (redact PII before embedding). All LLM-bound untrusted text passes through these. _Derives: `04_TRD §7b`. Check: injection-laced fixture does not alter model behavior._
 - [x] **P2-8** `services/scoring.py`: cheap skill-overlap pre-filter → AI score using the 4 data-honest dimensions `{skills, seniority, rate, freshness}` (terse JSON), cache in `scores` by `(user,job,profile_version)`, daily Redis cap. Endpoint `POST /jobs/{id}/score`. _Derives: US-C1/C3, `04_TRD §5, §5b`._
-- [ ] **P2-9** Score reasoning on demand: `GET /jobs/{id}/score/why` (lazy-generate + cache `reasoning`). _Derives: US-C2._
+- [x] **P2-9** Score reasoning on demand: `GET /jobs/{id}/score/why` (lazy-generate + cache `reasoning`). _Derives: US-C2._
 - [x] **P2-10** `agents/`: `GigPilotState`, LangGraph `graph.py` (nodes: retrieve_voice → draft; conditional entry from score), node impls. _Derives: `04_TRD §2`._
 - [x] **P2-11** `services/drafting.py`: Voice RAG (per-user ANN top-k) OR cold-start template; invoked via LangGraph. Endpoint `POST /jobs/{id}/draft`. _Derives: US-D1, PRD §6._
 - [x] **P2-12** `services/credits.py`: atomic quota check+increment on draft success only; monthly reset logic. _Derives: US-D4/F1–F3, `05_Schema §3.8`._
@@ -54,19 +54,19 @@ Legend: `[ ]` todo · `[x]` done · each task notes the doc it derives from and 
 - [x] **P2-17** `mcp/server.py`: MCP server exposing `search_jobs`, `score_job`, `draft_proposal`, `list_proposals`, `set_outcome` — thin wrappers over existing `services/`, auth via `MCP_AUTH_TOKEN`→user, enforcing the same tenant scope/credits/caps/guardrails. _Derives: `04_TRD §10`. Check: a tool call runs under the user and consumes a credit on draft; never bypasses RLS._
 
 ## Phase 3 — UI Integration
-- [ ] **P3-1** Tailwind config + `globals.css` CSS variables from `03_UI_Spec.md §2–4`; fonts (Space Grotesk/Inter/JetBrains Mono). _Check: tokens resolve in both themes._
-- [ ] **P3-2** `components/ui/` primitives: Button, Input, Select, Textarea, Card, Badge/ScoreChip, Modal, Toast, Skeleton, EmptyState — all states from `03_UI_Spec §5`. _Check: storybook-less demo page renders states._
-- [ ] **P3-3** API client + auth context (in-memory access token, silent refresh, 401 handling) + TanStack Query setup. _Derives: `02_AppFlow §2–3`._
-- [ ] **P3-4** Route middleware for protected/public redirects. _Check: unauth → /login; auth on /login → /app._
-- [ ] **P3-5** `/signup`, `/login` screens with RHF+Zod, inline errors. _Derives: `02_AppFlow §4.2–4.3`._
-- [ ] **P3-6** `/onboarding` 3-step wizard (profile, samples, cold-start questionnaire). _Derives: `02_AppFlow §4.4`._
-- [ ] **P3-7** App shell (sidebar/topbar, credits pill, user menu, theme). _Derives: `03_UI_Spec §5.9`._
-- [ ] **P3-8** `/app` feed: filters, job cards, score chip + inline "Score", sort, all empty/loading/error states. _Derives: `02_AppFlow §4.5`._
-- [ ] **P3-9** `/app/jobs/[id]`: score panel (+Why), draft panel (generate/edit/copy/export/regenerate/mark-used), credit + error states. _Derives: `02_AppFlow §4.6`._
-- [ ] **P3-10** `/app/proposals` + `[id]`: list, inline outcome, edit/delete. _Derives: `02_AppFlow §4.7–4.8`._
-- [ ] **P3-11** `/app/dashboard`: Recharts widgets + empty state. _Derives: `02_AppFlow §4.9`._
-- [ ] **P3-12** `/app/settings`: profile, samples, plan/credits (upgrade stub), account (password, logout, delete). _Derives: `02_AppFlow §4.10`._
-- [ ] **P3-13** 404 + global error boundary + offline toast. _Derives: `02_AppFlow §2`._
+- [x] **P3-1** Tailwind config + `globals.css` CSS variables from `03_UI_Spec.md §2–4`; fonts (Space Grotesk/Inter/JetBrains Mono). _Check: tokens resolve in both themes._
+- [x] **P3-2** `components/ui/` primitives: Button, Input, Select, Textarea, Card, Badge/ScoreChip, Modal, Toast, Skeleton, EmptyState — all states from `03_UI_Spec §5`. _Check: storybook-less demo page renders states._
+- [x] **P3-3** API client + auth context (in-memory access token, silent refresh, 401 handling) + TanStack Query setup. _Derives: `02_AppFlow §2–3`._
+- [x] **P3-4** Route middleware for protected/public redirects. _Check: unauth → /login; auth on /login → /app._
+- [x] **P3-5** `/signup`, `/login` screens with RHF+Zod, inline errors. _Derives: `02_AppFlow §4.2–4.3`._
+- [x] **P3-6** `/onboarding` 3-step wizard (profile, samples, cold-start questionnaire). _Derives: `02_AppFlow §4.4`._
+- [x] **P3-7** App shell (sidebar/topbar, credits pill, user menu, theme). _Derives: `03_UI_Spec §5.9`._
+- [x] **P3-8** `/app` feed: filters, job cards, score chip + inline "Score", sort, all empty/loading/error states. _Derives: `02_AppFlow §4.5`._
+- [x] **P3-9** `/app/jobs/[id]`: score panel (+Why), draft panel (generate/edit/copy/export/regenerate/mark-used), credit + error states. _Derives: `02_AppFlow §4.6`._
+- [x] **P3-10** `/app/proposals` + `[id]`: list, inline outcome, edit/delete. _Derives: `02_AppFlow §4.7–4.8`._
+- [x] **P3-11** `/app/dashboard`: Recharts widgets + empty state. _Derives: `02_AppFlow §4.9`._
+- [x] **P3-12** `/app/settings`: profile, samples, plan/credits (upgrade stub), account (password, logout, delete). _Derives: `02_AppFlow §4.10`._
+- [x] **P3-13** 404 + global error boundary + offline toast. _Derives: `02_AppFlow §2`._
 
 ## Phase 4 — Edge Cases, Hardening & Tests
 - [ ] **P4-1** Credit edge tests: 0 credits blocks draft; AI failure does NOT deduct; monthly reset. _Derives: `02_AppFlow §6`._
@@ -120,11 +120,12 @@ Legend: `[ ]` todo · `[x]` done · each task notes the doc it derives from and 
 2026-11-20 | P2-7b | f118e34 | Guardrails: sanitize.py, injection.py (detect+strip+delimit), pii.py (redact email/phone); 11 tests pass incl injection-laced fixture
 2026-11-20 | P2-8 | e31ca76 | Scoring service: skill-overlap pre-filter, AI 4-dim score, cache by (user,job,profile_version), daily Redis cap, POST /jobs/{id}/score; 10 tests pass
 2026-11-20 | P2-9 | cd9e28d | Lazy reasoning GET /jobs/{id}/score/why; cached in score.reasoning; 3 tests pass
-2026-11-20 | P2-10 | pending | LangGraph agents: GigPilotState, retrieve_voice + generate_draft nodes, graph.py; 3 tests pass
-2026-11-20 | P2-11 | pending | Drafting service: voice RAG (top-5 ANN) + cold-start template; POST /jobs/{id}/draft via LangGraph
-2026-11-20 | P2-12 | pending | Credits service: atomic quota check+increment, release on failure, monthly reset
-2026-11-20 | P2-13 | pending | Proposals API: draft, GET/PATCH/DELETE /proposals, set outcome; 5 tests pass
-2026-11-20 | P2-14 | pending | Stats service + GET /me/stats: win-rate, counts, avg scores; 2 tests pass
-2026-11-20 | P2-15 | pending | Feedback loop: outcome stats injected as one line into scoring prompt
-2026-11-20 | P2-16 | pending | GET /health + GET /health/ready (DB+Redis probe); 2 tests pass
-2026-11-20 | P2-17 | pending | MCP server: search_jobs, score_job, draft_proposal, list_proposals, set_outcome; auth via MCP_AUTH_TOKEN
+2026-11-20 | P2-10 | 7668207 | LangGraph agents: GigPilotState, retrieve_voice + generate_draft nodes, graph.py; 3 tests pass
+2026-11-20 | P2-11 | 7668207 | Drafting service: voice RAG (top-5 ANN) + cold-start template; POST /jobs/{id}/draft via LangGraph
+2026-11-20 | P2-12 | 7668207 | Credits service: atomic quota check+increment, release on failure, monthly reset
+2026-11-20 | P2-13 | 7668207 | Proposals API: draft, GET/PATCH/DELETE /proposals, set outcome; 5 tests pass
+2026-11-20 | P2-14 | 7668207 | Stats service + GET /me/stats: win-rate, counts, avg scores; 2 tests pass
+2026-11-20 | P2-15 | 7668207 | Feedback loop: outcome stats injected as one line into scoring prompt
+2026-11-20 | P2-16 | 7668207 | GET /health + GET /health/ready (DB+Redis probe); 2 tests pass
+2026-11-20 | P2-17 | 7668207 | MCP server: search_jobs, score_job, draft_proposal, list_proposals, set_outcome; auth via MCP_AUTH_TOKEN
+2026-11-20 | P3-1..P3-13 | pending | Phase 3 UI: Tailwind tokens, UI primitives, API client+auth ctx, middleware, login/signup/onboarding/app shell/feed/job detail/proposals/dashboard/settings/404+error boundary+offline toast

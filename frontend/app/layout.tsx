@@ -1,19 +1,28 @@
 import type { Metadata } from "next";
 import "../styles/globals.css";
+import { AuthProvider } from "@/lib/auth";
+import { QueryProvider } from "@/lib/query";
+import { ToastProvider } from "@/components/ui";
+import OfflineToast from "@/components/feature/OfflineToast";
 
 export const metadata: Metadata = {
-  title: "GigPilot",
-  description: "AI co-pilot for freelancers: discover jobs, score fit, draft proposals.",
+  title: "GigPilot — AI co-pilot for freelancers",
+  description: "Discover jobs, score fit, draft proposals in your voice.",
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className="dark">
-      <body>{children}</body>
+      <body>
+        <QueryProvider>
+          <AuthProvider>
+            <ToastProvider>
+              {children}
+              <OfflineToast />
+            </ToastProvider>
+          </AuthProvider>
+        </QueryProvider>
+      </body>
     </html>
   );
 }
