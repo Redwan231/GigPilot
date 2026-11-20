@@ -41,8 +41,13 @@ async def _truncate() -> None:
 
 
 @pytest_asyncio.fixture
-async def client() -> AsyncClient:
+async def clean_db() -> None:
     await _truncate()
+    yield
+
+
+@pytest_asyncio.fixture
+async def client(clean_db: None) -> AsyncClient:
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://testserver") as c:
         yield c

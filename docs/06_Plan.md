@@ -31,7 +31,7 @@ Legend: `[ ]` todo · `[x]` done · each task notes the doc it derives from and 
 - [x] **P1-7** `core/security.py`: bcrypt hashing, JWT sign/verify (HS256), opaque refresh token gen + SHA-256. _Check: unit tests._
 - [x] **P1-8** Auth endpoints: `signup`, `login`, `refresh` (rotation + reuse-detection), `logout` (`05_Schema.md §6`). _Check: integration tests cover happy + 401 + rotation._
 - [x] **P1-9** `api/deps.py`: `get_current_user` (verify JWT, set RLS GUC), rate-limit deps. _Check: protected route rejects no/invalid token._
-- [ ] **P1-10** RLS isolation test: user A cannot read user B's rows even with forged `user_id` in body. _Check: test passes (critical security gate)._
+- [x] **P1-10** RLS isolation test: user A cannot read user B's rows even with forged `user_id` in body. _Check: test passes (critical security gate)._
 
 ## Phase 2 — Core API & Services (no UI yet)
 - [ ] **P2-1** `me` endpoints: `GET /me`, `PATCH /me/profile` (bumps `profile_version`), onboarding completion. _Derives: US-A3, `02_AppFlow §4.4`._
@@ -109,3 +109,4 @@ Legend: `[ ]` todo · `[x]` done · each task notes the doc it derives from and 
 2026-11-20 | P1-7 | 9f538d4 | core/security.py: bcrypt(cost12) hash/verify, HS256 access JWT create/decode(type+exp check), opaque refresh token + sha256. 6 unit tests pass. Pinned bcrypt<5 (passlib 1.7.4 breaks with bcrypt 5 on py3.13) -> lock refrozen, 04_TRD §1 note ⁵
 2026-11-20 | P1-8 | edb714f | Auth endpoints (schemas/auth, main app factory, api/routes/auth, conftest w/ NullPool + truncate). signup/login/refresh(rotation+reuse-detect+10s grace)/logout on system_session. Migration 099ba0111c1e adds refresh_tokens.revoked_at (reconciles §3.10 w/ §6). 10 integration + 6 unit tests pass (happy/401/rotation/reuse/logout-final)
 2026-11-20 | P1-9 | 2b5b293 | api/deps.py: get_current_user_id (verify Bearer JWT), get_tenant_db (tenant_session RLS GUC), get_current_user (privileged user load); core/rate_limit.py (slowapi Limiter wired into app); protected GET /me (api/routes/me.py). 3 deps tests: no token->401, bad token->401, valid->200
+2026-11-20 | P1-10 | b7d0b96 | RLS isolation gate (test_rls.py, 4 tests) GENUINELY PASS vs real Postgres under non-BYPASSRLS role: A sees only A; forged-id read of B -> nothing; forged INSERT user_id=B -> WITH CHECK reject (DBAPIError); forged UPDATE/DELETE -> 0 rows; API token maps to own user only. Full suite 24 passed
