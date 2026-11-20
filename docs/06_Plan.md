@@ -69,8 +69,8 @@ Legend: `[ ]` todo · `[x]` done · each task notes the doc it derives from and 
 - [x] **P3-13** 404 + global error boundary + offline toast. _Derives: `02_AppFlow §2`._
 
 ## Phase 4 — Edge Cases, Hardening & Tests
-- [ ] **P4-1** Credit edge tests: 0 credits blocks draft; AI failure does NOT deduct; monthly reset. _Derives: `02_AppFlow §6`._
-- [ ] **P4-2** Scoring cap test: daily cap blocks with reset messaging. _Derives: `02_AppFlow §6`._
+- [x] **P4-1** Credit edge tests: 0 credits blocks draft; AI failure does NOT deduct; monthly reset. _Derives: `02_AppFlow §6`._
+- [x] **P4-2** Scoring cap test: daily cap blocks with reset messaging. _Derives: `02_AppFlow §6`._
 - [ ] **P4-3** Cold-start path test: no samples → template draft, banner shown, `voice_matched=false`. _Derives: PRD §6._
 - [ ] **P4-4** Dedup test: same job from two sources stored once. _Derives: `04_TRD §6`._
 - [ ] **P4-5** Adapter-down test: one source errors, aggregation still succeeds, `source_health` updated. _Derives: `04_TRD §6`._
