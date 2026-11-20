@@ -25,7 +25,7 @@ Legend: `[ ]` todo · `[x]` done · each task notes the doc it derives from and 
 - [x] **P1-1** Alembic init + async engine/session in `db/session.py`, incl. RLS GUC setter hook. _Derives: `05_Schema.md §5`._
 - [x] **P1-2** Migration: extensions + enum types (`05_Schema.md §1–2`). _Check: migration up/down clean._
 - [x] **P1-3** Migration: `users`, `profiles`, `subscriptions`, `refresh_tokens` + indexes + `updated_at` triggers. _Check: tables exist._
-- [ ] **P1-4** Migration: `writing_samples`, `sample_chunks` (vector(768) + HNSW), `jobs`, `scores`, `proposals`, `ai_usage`, `source_health`. _Check: HNSW index present, dim=768._
+- [x] **P1-4** Migration: `writing_samples`, `sample_chunks` (vector(768) + HNSW), `jobs`, `scores`, `proposals`, `ai_usage`, `source_health`. _Check: HNSW index present, dim=768._
 - [ ] **P1-5** Migration: enable RLS + `tenant_isolation` policies on all user-owned tables (`05_Schema.md §5.2`). _Check: unset GUC → zero rows._
 - [ ] **P1-6** SQLAlchemy models mirroring every table (field names == columns). _Check: `Base.metadata` matches migration._
 - [ ] **P1-7** `core/security.py`: bcrypt hashing, JWT sign/verify (HS256), opaque refresh token gen + SHA-256. _Check: unit tests._
@@ -103,3 +103,4 @@ Legend: `[ ]` todo · `[x]` done · each task notes the doc it derives from and 
 2026-11-20 | P1-1 | 9661107 | Alembic (async env.py) + config.py (pydantic-settings, asyncpg URL normalize) + db/base.py + db/session.py with tenant_session (SET LOCAL ROLE gigpilot_app + set_config GUC) & system_session. alembic current clean vs local pgvector; ruff/black clean
 2026-11-20 | P1-2 | 15542f8 | Migration 85563be81646: extensions (pgcrypto/vector/citext) + 7 enum types; up/down/up clean on local pgvector, objects verified
 2026-11-20 | P1-3 | 832feeb | Migration 3d5c9c9161f9: users/profiles/subscriptions/refresh_tokens + GIN(skills)/idx(user_id) + set_updated_at() trigger on 3 tables; up/down/up clean, objects verified
+2026-11-20 | P1-4 | 9ef6302 | Migration 95ab058184fe: writing_samples/sample_chunks(vector(768)+HNSW cosine)/jobs/scores/proposals/ai_usage/source_health + indexes + proposals updated_at trigger + source_health seed(4). HNSW+dim=768 verified; up/down/up clean
